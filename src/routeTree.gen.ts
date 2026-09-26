@@ -10,13 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ItemIdRouteImport } from './routes/item.$id'
+import { Route as AuthenticatedReportFoundRouteImport } from './routes/_authenticated/report.found'
+import { Route as AuthenticatedReportLostRouteImport } from './routes/_authenticated/report.lost'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -34,39 +42,90 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ItemIdRoute = ItemIdRouteImport.update({
+  id: '/item/$id',
+  path: '/item/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedReportFoundRoute =
+  AuthenticatedReportFoundRouteImport.update({
+    id: '/report/found',
+    path: '/report/found',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReportLostRoute = AuthenticatedReportLostRouteImport.update({
+  id: '/report/lost',
+  path: '/report/lost',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/item/$id': typeof ItemIdRoute
+  '/report/found': typeof AuthenticatedReportFoundRoute
+  '/report/lost': typeof AuthenticatedReportLostRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/item/$id': typeof ItemIdRoute
+  '/report/found': typeof AuthenticatedReportFoundRoute
+  '/report/lost': typeof AuthenticatedReportLostRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/item/$id': typeof ItemIdRoute
+  '/_authenticated/report/found': typeof AuthenticatedReportFoundRoute
+  '/_authenticated/report/lost': typeof AuthenticatedReportLostRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/browse' | '/reset-password'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/browse'
+    | '/reset-password'
+    | '/item/$id'
+    | '/report/found'
+    | '/report/lost'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/browse' | '/reset-password'
-  id: '__root__' | '/' | '/auth' | '/browse' | '/reset-password'
+  to:
+    | '/'
+    | '/auth'
+    | '/browse'
+    | '/reset-password'
+    | '/item/$id'
+    | '/report/found'
+    | '/report/lost'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/browse'
+    | '/reset-password'
+    | '/item/$id'
+    | '/_authenticated/report/found'
+    | '/_authenticated/report/lost'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   BrowseRoute: typeof BrowseRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ItemIdRoute: typeof ItemIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -99,14 +165,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/item/$id': {
+      id: '/item/$id'
+      path: '/item/$id'
+      fullPath: '/item/$id'
+      preLoaderRoute: typeof ItemIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/report/found': {
+      id: '/_authenticated/report/found'
+      path: '/report/found'
+      fullPath: '/report/found'
+      preLoaderRoute: typeof AuthenticatedReportFoundRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/report/lost': {
+      id: '/_authenticated/report/lost'
+      path: '/report/lost'
+      fullPath: '/report/lost'
+      preLoaderRoute: typeof AuthenticatedReportLostRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedReportFoundRoute: typeof AuthenticatedReportFoundRoute
+  AuthenticatedReportLostRoute: typeof AuthenticatedReportLostRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedReportFoundRoute: AuthenticatedReportFoundRoute,
+  AuthenticatedReportLostRoute: AuthenticatedReportLostRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BrowseRoute: BrowseRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ItemIdRoute: ItemIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
