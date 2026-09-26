@@ -57,7 +57,7 @@ export function notificationsQuery(userId: string | undefined) {
 export async function notify(input: {
   userId: string;
   title: string;
-  body?: string;
+  body?: string | null;
   kind?: string;
   link?: string;
 }) {

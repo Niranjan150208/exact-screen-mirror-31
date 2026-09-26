@@ -166,7 +166,10 @@ function AdminPage() {
     const { error } = await supabase
       .from("categories")
       .insert({ name, slug: name.toLowerCase().replace(/\s+/g, "-") });
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     setNewCategory("");
     toast.success("Category added.");
     queryClient.invalidateQueries({ queryKey: ["categories"] });
