@@ -78,7 +78,7 @@ function Dashboard() {
             : status === "rejected"
               ? "Claim rejected"
               : "More verification requested",
-        body: item ? `Regarding "${item.title}" (${item.report_id}).` : undefined,
+        body: item ? `Regarding "" ().` : "",
         kind: "claim",
       });
     }
