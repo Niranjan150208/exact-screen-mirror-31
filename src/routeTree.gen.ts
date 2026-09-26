@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BrowseRouteImport } from './routes/browse'
+import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ItemIdRouteImport } from './routes/item.$id'
 import { Route as AuthenticatedReportFoundRouteImport } from './routes/_authenticated/report.found'
 import { Route as AuthenticatedReportLostRouteImport } from './routes/_authenticated/report.lost'
@@ -37,10 +39,20 @@ const BrowseRoute = BrowseRouteImport.update({
   path: '/browse',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImpactRoute = ImpactRouteImport.update({
+  id: '/impact',
+  path: '/impact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ItemIdRoute = ItemIdRouteImport.update({
   id: '/item/$id',
@@ -63,7 +75,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
+  '/impact': typeof ImpactRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/item/$id': typeof ItemIdRoute
   '/report/found': typeof AuthenticatedReportFoundRoute
   '/report/lost': typeof AuthenticatedReportLostRoute
@@ -72,7 +86,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
+  '/impact': typeof ImpactRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/item/$id': typeof ItemIdRoute
   '/report/found': typeof AuthenticatedReportFoundRoute
   '/report/lost': typeof AuthenticatedReportLostRoute
@@ -83,7 +99,9 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
+  '/impact': typeof ImpactRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/item/$id': typeof ItemIdRoute
   '/_authenticated/report/found': typeof AuthenticatedReportFoundRoute
   '/_authenticated/report/lost': typeof AuthenticatedReportLostRoute
@@ -94,7 +112,9 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/browse'
+    | '/impact'
     | '/reset-password'
+    | '/dashboard'
     | '/item/$id'
     | '/report/found'
     | '/report/lost'
@@ -103,7 +123,9 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/browse'
+    | '/impact'
     | '/reset-password'
+    | '/dashboard'
     | '/item/$id'
     | '/report/found'
     | '/report/lost'
@@ -113,7 +135,9 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/browse'
+    | '/impact'
     | '/reset-password'
+    | '/_authenticated/dashboard'
     | '/item/$id'
     | '/_authenticated/report/found'
     | '/_authenticated/report/lost'
@@ -124,6 +148,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   BrowseRoute: typeof BrowseRoute
+  ImpactRoute: typeof ImpactRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ItemIdRoute: typeof ItemIdRoute
 }
@@ -158,12 +183,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrowseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/impact': {
+      id: '/impact'
+      path: '/impact'
+      fullPath: '/impact'
+      preLoaderRoute: typeof ImpactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/item/$id': {
       id: '/item/$id'
@@ -190,11 +229,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedReportFoundRoute: typeof AuthenticatedReportFoundRoute
   AuthenticatedReportLostRoute: typeof AuthenticatedReportLostRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedReportFoundRoute: AuthenticatedReportFoundRoute,
   AuthenticatedReportLostRoute: AuthenticatedReportLostRoute,
 }
@@ -207,6 +248,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BrowseRoute: BrowseRoute,
+  ImpactRoute: ImpactRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ItemIdRoute: ItemIdRoute,
 }
