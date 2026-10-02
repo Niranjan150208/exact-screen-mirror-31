@@ -71,5 +71,9 @@ export async function notify(input: {
 }
 
 export async function logActivity(action: string, detail: string, actorName?: string | null) {
-  await supabase.from("activity_logs").insert({ action, detail, actor_name: actorName ?? null });
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) return;
+  await supabase
+    .from("activity_logs")
+    .insert({ action, detail, actor_id: data.user.id, actor_name: actorName ?? null });
 }
