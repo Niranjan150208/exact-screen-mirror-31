@@ -15,6 +15,13 @@
       "when": 1790408358644,
       "tag": "0001_item_photos_storage_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790958453974,
+      "tag": "0002_tighten_notifications_logs_photos",
+      "breakpoints": true
     }
   ]
 }
